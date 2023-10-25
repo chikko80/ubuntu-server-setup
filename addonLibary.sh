@@ -44,6 +44,11 @@ function installDocker() {
 
 function installTraefik() {
     echo "Calling installTraefik.."
+    local traefik_email=$1
+    local traefik_domain=$1
+    local webgui_user=$1
+    local webgui_pass=$1
+
     # Download and extract Traefik
     sudo apt install apache2-utils
 
@@ -58,10 +63,6 @@ function installTraefik() {
     sudo chmod 600 /opt/traefik/state/acme.json
 
     # Prompt for email, domain, and web GUI authentication details
-    read -rp "Enter the email for SSL certificates: " traefik_email
-    read -rp "Enter the domain for Traefik basis domain (used for webgui): " traefik_domain
-    read -rp "Enter the username for the Traefik web GUI: " webgui_user
-    read -rsp "Enter the password for the Traefik web GUI: " webgui_pass
     echo  # This is to move to the next line after the silent password prompt
 
     # Generate the credentials using htpasswd and store in a variable
