@@ -9,6 +9,7 @@ function installFail2Ban() {
     sudo cp ./jail.local /etc/fail2ban/jail.local
 
     # Start the fail2ban service
+    sudo systemctl enable fail2ban
     sudo service fail2ban start
 }
 
@@ -79,6 +80,7 @@ function installTraefik() {
 
     sudo cp ./traefik.service /etc/systemd/system/traefik.service
     
+    sudo systemctl enable traefik
     sudo service traefik start
 
 }
@@ -100,6 +102,29 @@ function installNodeExporter() {
             sudo systemctl daemon-reload
             sudo systemctl start node_exporter
             sudo systemctl enable node_exporter
+            ;;
+        n|N) 
+            echo "Skipping node exporter install."
+            ;;
+        *) 
+            echo "Invalid choice. Exiting."
+            exit 1
+            ;;
+    esac
+}
+
+
+
+
+function installK3() {
+    read -rp "Install k3 cluster? (y/n) " choice
+    case "${choice}" in
+        y|Y) 
+            echo "Calling installK3.."
+            curl -sfL https://get.k3s.io | sh -
+            sudo chown $USER /etc/rancher/k3s/k3s.yaml
+            echo "Disabling public cluster export.."
+            kubectl -n kube-system patch svc traefik --type=merge -p '{"spec": {"type": "ClusterIP"}}'
             ;;
         n|N) 
             echo "Skipping node exporter install."
