@@ -45,9 +45,9 @@ function installDocker() {
 function installTraefik() {
     echo "Calling installTraefik.."
     local traefik_email=$1
-    local traefik_domain=$1
-    local webgui_user=$1
-    local webgui_pass=$1
+    local traefik_domain=$2
+    local webgui_user=$3
+    local webgui_pass=$4
 
     # Download and extract Traefik
     sudo apt install apache2-utils -y
