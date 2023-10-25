@@ -3,7 +3,7 @@ function installFail2Ban() {
     echo "Calling installFail2Ban.."
     echo "Installing Fail2Ban.."
     # Install fail2ban
-    sudo apt install fail2ban
+    sudo apt install fail2ban -y
 
     # Copy jail.local from the current directory to /etc/fail2ban/
     sudo cp ./jail.local /etc/fail2ban/jail.local
@@ -22,7 +22,7 @@ function installDocker() {
     
     # Add Docker's official GPG key:
     sudo apt-get update
-    sudo apt-get install ca-certificates curl gnupg
+    sudo apt-get install ca-certificates curl gnupg -y
     sudo install -m 0755 -d /etc/apt/keyrings
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
     sudo chmod a+r /etc/apt/keyrings/docker.gpg
@@ -35,7 +35,7 @@ function installDocker() {
     sudo apt-get update
     
 
-    sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 
     sudo usermod -aG docker "${username}"
 
@@ -50,7 +50,7 @@ function installTraefik() {
     local webgui_pass=$1
 
     # Download and extract Traefik
-    sudo apt install apache2-utils
+    sudo apt install apache2-utils -y
 
     wget https://github.com/traefik/traefik/releases/download/v2.10.4/traefik_v2.10.4_linux_amd64.tar.gz
     tar -zxvf traefik_v2.10.4_linux_amd64.tar.gz
