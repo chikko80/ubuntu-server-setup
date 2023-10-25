@@ -1,5 +1,6 @@
 # Setup Fail2Ban
 function installFail2Ban() {
+    echo "Calling installFail2Ban.."
     echo "Installing Fail2Ban.."
     # Install fail2ban
     sudo apt install fail2ban
@@ -14,6 +15,7 @@ function installFail2Ban() {
 
 # Setup Fail2Ban
 function installDocker() {
+    echo "Calling installDocker.."
     local username=$1
 
     for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
@@ -41,6 +43,7 @@ function installDocker() {
 
 
 function installTraefik() {
+    echo "Calling installTraefik.."
     # Download and extract Traefik
     sudo apt install apache2-utils
 

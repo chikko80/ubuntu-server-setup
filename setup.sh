@@ -3,12 +3,14 @@
 set -e
 
 function getCurrentDir() {
+    echo "Calling getCurrentDir.."
     local current_dir="${BASH_SOURCE%/*}"
     if [[ ! -d "${current_dir}" ]]; then current_dir="$PWD"; fi
     echo "${current_dir}"
 }
 
 function includeDependencies() {
+    echo "Calling includeDependencies.."
     # shellcheck source=./setupLibrary.sh
     source "${current_dir}/setupLibrary.sh"
 }
@@ -18,6 +20,7 @@ includeDependencies
 output_file="output.log"
 
 function main() {
+    echo "Calling main.."
 
     sudo apt-get update && sudo apt-get upgrade -y
 
@@ -27,7 +30,7 @@ function main() {
     read -rp "Enter the username of the new user account: " username
     read -rsp "Enter the password for the new user account: " password
     echo  # This is to move to the next line after the silent password prompt
-    addUserAccount "${username}" "${password}"
+    addUserAccount "${username}" "${password}" "true"
 
     read -rp $'Paste in the public SSH key for the new user:\n' sshKey
     echo 'Running setup script...'
@@ -57,6 +60,7 @@ function main() {
 }
 
 function setupSwap() {
+    echo "Calling setupSwap.."
     createSwap
     mountSwap
     tweakSwapSettings "10" "50"
@@ -64,16 +68,19 @@ function setupSwap() {
 }
 
 function hasSwap() {
+    echo "Calling hasSwap.."
     [[ "$(sudo swapon -s)" == *"/swapfile"* ]]
 }
 
 function cleanup() {
+    echo "Calling cleanup.."
     if [[ -f "/etc/sudoers.bak" ]]; then
         revertSudoers
     fi
 }
 
 function logTimestamp() {
+    echo "Calling logTimestamp.."
     local filename=${1}
     {
         echo "===================" 
@@ -83,6 +90,7 @@ function logTimestamp() {
 }
 
 function setupTimezone() {
+    echo "Calling setupTimezone.."
     echo -ne "Enter the timezone for the server (Default is 'Asia/Singapore'):\n" >&3
     read -r timezone
     if [ -z "${timezone}" ]; then

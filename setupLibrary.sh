@@ -4,6 +4,7 @@
 # Arguments:
 #   Account Username
 function updateUserAccount() {
+    echo "Calling updateUserAccount.."
     local username=${1}
     
     sudo passwd -d "${username}"
@@ -15,6 +16,7 @@ function updateUserAccount() {
 #   Account Username
 #   Flag to determine if user account is added silently. (With / Without GECOS prompt)
 function addUserAccount() {
+    echo "Calling addUserAccount.."
     local username=${1}
     local password=${2}
     local silent_mode=${3}
@@ -42,6 +44,7 @@ function addUserAccount() {
 #   Account Username
 #   Public SSH Key
 function addSSHKey() {
+    echo "Calling addSSHKey.."
     local username=${1}
     local sshKey=${2}
 
@@ -55,6 +58,7 @@ function addSSHKey() {
 #   Account Username
 #   Command to be executed
 function execAsUser() {
+    echo "Calling execAsUser.."
     local username=${1}
     local exec_command=${2}
 
@@ -64,22 +68,26 @@ function execAsUser() {
 # Modify the sshd_config file
 # shellcheck disable=2116
 function changeSSHConfig() {
+    echo "Calling changeSSHConfig.."
     sudo sed -re 's/^(\#?)(PasswordAuthentication)([[:space:]]+)yes/\2\3no/' -i."$(echo 'old')" /etc/ssh/sshd_config
     sudo sed -re 's/^(\#?)(PermitRootLogin)([[:space:]]+)(.*)/PermitRootLogin no/' -i /etc/ssh/sshd_config
 }
 
 # Setup the Uncomplicated Firewall
 function setupUfw() {
+    echo "Calling setupUfw.."
     sudo apt-get install ufw
     sudo ufw default deny outgoing
     sudo ufw allow OpenSSH
     sudo ufw allow 80
     sudo ufw allow 443
-    sudo ufw enable
+    yes y | sudo ufw enable
+
 }
 
 # Create the swap file based on amount of physical memory on machine (Maximum size of swap is 4GB)
 function createSwap() {
+    echo "Calling createSwap.."
    local swapmem=$(($(getPhysicalMemory) * 2))
 
    # Anything over 4GB in swap is probably unnecessary as a RAM fallback
@@ -95,6 +103,7 @@ function createSwap() {
 
 # Mount the swapfile
 function mountSwap() {
+    echo "Calling mountSwap.."
     sudo cp /etc/fstab /etc/fstab.bak
     echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 }
@@ -104,6 +113,7 @@ function mountSwap() {
 #   new vm.swappiness value
 #   new vm.vfs_cache_pressure value
 function tweakSwapSettings() {
+    echo "Calling tweakSwapSettings.."
     local swappiness=${1}
     local vfs_cache_pressure=${2}
 
@@ -116,6 +126,7 @@ function tweakSwapSettings() {
 #   new vm.swappiness value
 #   new vm.vfs_cache_pressure value
 function saveSwapSettings() {
+    echo "Calling saveSwapSettings.."
     local swappiness=${1}
     local vfs_cache_pressure=${2}
 
@@ -127,6 +138,7 @@ function saveSwapSettings() {
 # Arguments:
 #   tz data timezone
 function setTimezone() {
+    echo "Calling setTimezone.."
     local timezone=${1}
     echo "${1}" | sudo tee /etc/timezone
     sudo ln -fs "/usr/share/zoneinfo/${timezone}" /etc/localtime # https://bugs.launchpad.net/ubuntu/+source/tzdata/+bug/1554806
@@ -135,6 +147,7 @@ function setTimezone() {
 
 # Configure Network Time Protocol
 function configureNTP() {
+    echo "Calling configureNTP.."
     ubuntu_version="$(lsb_release -sr)"
 
     if [[ $(bc -l <<< "${ubuntu_version} >= 20.04") -eq 1 ]]; then
@@ -152,6 +165,7 @@ function configureNTP() {
 
 # Gets the amount of physical memory in GB (rounded up) installed on the machine
 function getPhysicalMemory() {
+    echo "Calling getPhysicalMemory.."
     local phymem
     phymem="$(free -g|awk '/^Mem:/{print $2}')"
     
@@ -166,6 +180,7 @@ function getPhysicalMemory() {
 # Arguments:
 #   Account username
 function disableSudoPassword() {
+    echo "Calling disableSudoPassword.."
     local username="${1}"
 
     sudo cp /etc/sudoers /etc/sudoers.bak
@@ -174,6 +189,7 @@ function disableSudoPassword() {
 
 # Reverts the original /etc/sudoers file before this script is ran
 function revertSudoers() {
+    echo "Calling revertSudoers.."
     sudo cp /etc/sudoers.bak /etc/sudoers
     sudo rm -rf /etc/sudoers.bak
 }
