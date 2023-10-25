@@ -56,7 +56,7 @@ function main() {
     installTraefik "${traefik_email}" "${traefik_domain}" "${webgui_user}" "${webgui_pass}"
 
 
-    echo "Setup Done! Log file is located at ${output_file}" >&3
+    echo "Setup Done!"
 }
 
 
