@@ -40,64 +40,12 @@ function main() {
     changeSSHConfig
     setupUfw
 
-    if !hasSwap; then
-        setupSwap
-    fi
-
-    # echo "Configuring System Time... " >&3
-    # setupTimezone
-    # configureNTP
-
     sudo service ssh restart
     
     installFail2Ban
     installDocker "${username}"
     installTraefik
 
-    cleanup
 
     echo "Setup Done! Log file is located at ${output_file}" >&3
 }
-
-function setupSwap() {
-    echo "Calling setupSwap.."
-    createSwap
-    mountSwap
-    tweakSwapSettings "10" "50"
-    saveSwapSettings "10" "50"
-}
-
-function hasSwap() {
-    echo "Calling hasSwap.."
-    [[ "$(sudo swapon -s)" == *"/swapfile"* ]]
-}
-
-function cleanup() {
-    echo "Calling cleanup.."
-    if [[ -f "/etc/sudoers.bak" ]]; then
-        revertSudoers
-    fi
-}
-
-function logTimestamp() {
-    echo "Calling logTimestamp.."
-    local filename=${1}
-    {
-        echo "===================" 
-        echo "Log generated on $(date)"
-        echo "==================="
-    } >>"${filename}" 2>&1
-}
-
-function setupTimezone() {
-    echo "Calling setupTimezone.."
-    echo -ne "Enter the timezone for the server (Default is 'Asia/Singapore'):\n" >&3
-    read -r timezone
-    if [ -z "${timezone}" ]; then
-        timezone="Asia/Singapore"
-    fi
-    setTimezone "${timezone}"
-    echo "Timezone is set to $(cat /etc/timezone)" >&3
-}
-
-main
