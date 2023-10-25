@@ -75,7 +75,7 @@ function installTraefik() {
     sed "s/email_placeholder/${traefik_email}/" traefik.toml | sudo tee /etc/traefik/traefik.toml > /dev/null
     sed -e "s/domain_placeholder/${traefik_domain}/" -e "s|credentials|${credentials}|" traefik_dynamic.toml | sudo tee /etc/traefik/traefik_dynamic.toml > /dev/null
 
-    sudo cp ./jail.local /etc/fail2ban/jail.local
+    sudo cp ./traefik.service /etc/systemd/system/traefik.service
     
     sudo service traefik start
 
