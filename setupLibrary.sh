@@ -132,7 +132,6 @@ function setTimezone() {
     sudo ln -fs "/usr/share/zoneinfo/${timezone}" /etc/localtime # https://bugs.launchpad.net/ubuntu/+source/tzdata/+bug/1554806
     sudo dpkg-reconfigure -f noninteractive tzdata
 }
-ich mag die gastro
 
 # Configure Network Time Protocol
 function configureNTP() {
