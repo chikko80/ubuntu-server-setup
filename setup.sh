@@ -2,22 +2,13 @@
 
 set -e
 
-function getCurrentDir() {
-    echo "Calling getCurrentDir.."
-    local current_dir="${BASH_SOURCE%/*}"
-    if [[ ! -d "${current_dir}" ]]; then current_dir="$PWD"; fi
-    echo "${current_dir}"
-}
-
 function includeDependencies() {
     echo "Calling includeDependencies.."
     # shellcheck source=./setupLibrary.sh
-    source "${current_dir}/setupLibrary.sh"
+    source "./setupLibrary.sh"
 }
 
-current_dir=$(getCurrentDir)
 includeDependencies
-output_file="output.log"
 
 function main() {
     echo "Calling main.."
