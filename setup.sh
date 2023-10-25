@@ -29,7 +29,6 @@ function main() {
     esac
 
     # Run setup functions
-    trap cleanup EXIT SIGHUP SIGINT SIGTERM
 
     read -rp "Enter the username of the new user account: " username
     read -rsp "Enter the password for the new user account: " password

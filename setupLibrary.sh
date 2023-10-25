@@ -70,7 +70,7 @@ function execAsUser() {
 function changeSSHConfig() {
     echo "Calling changeSSHConfig.."
     sudo sed -re 's/^(\#?)(PasswordAuthentication)([[:space:]]+)yes/\2\3no/' -i."$(echo 'old')" /etc/ssh/sshd_config
-    sudo sed -re 's/^(\#?)(PermitRootLogin)([[:space:]]+)(.*)/PermitRootLogin no/' -i /etc/ssh/sshd_config
+    sudo sed -re 's/^(\#?)(PermitRootLogin)([[:space:]]+)(.*)/PermitRootLogin yes/' -i /etc/ssh/sshd_config
 }
 
 # Setup the Uncomplicated Firewall
@@ -78,7 +78,7 @@ function setupUfw() {
     echo "Calling setupUfw.."
     sudo apt-get install ufw
     sudo ufw default deny incoming
-    sudo ufw allow OpenSSH
+    sudo ufw allow 22
     sudo ufw allow 80
     sudo ufw allow 443
     yes y | sudo ufw enable
