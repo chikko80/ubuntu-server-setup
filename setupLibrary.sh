@@ -77,7 +77,7 @@ function changeSSHConfig() {
 function setupUfw() {
     echo "Calling setupUfw.."
     sudo apt-get install ufw
-    sudo ufw default deny outgoing
+    sudo ufw default deny incoming
     sudo ufw allow OpenSSH
     sudo ufw allow 80
     sudo ufw allow 443
