@@ -54,6 +54,7 @@ function main() {
     installFail2Ban
     installDocker "${username}"
     installTraefik "${traefik_email}" "${traefik_domain}" "${webgui_user}" "${webgui_pass}"
+    installNodeExporter
 
 
     echo "Setup Done!"

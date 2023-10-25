@@ -39,6 +39,8 @@ function installDocker() {
 
     sudo usermod -aG docker "${username}"
 
+    sudo apt install docker-compose -y
+
 }
 
 
@@ -79,4 +81,32 @@ function installTraefik() {
     
     sudo service traefik start
 
+}
+
+
+function installNodeExporter() {
+    read -rp "Install node exporter for prometheus on bare metal? (y/n) " choice
+    case "${choice}" in
+        y|Y) 
+            echo "Calling installNodeExporter.."
+            wget https://github.com/prometheus/node_exporter/releases/download/v1.6.1/node_exporter-1.6.1.linux-amd64.tar.gz
+            tar xvfz node_exporter-1.6.1.linux-amd64.tar.gz
+
+            sudo mv node_exporter-1.6.1.linux-amd64/node_exporter /usr/local/bin/
+            sudo useradd -rs /bin/false node_exporter
+            
+            sudo cp ./node_exporter.service /etc/systemd/system/node_exporter.service
+
+            sudo systemctl daemon-reload
+            sudo systemctl start node_exporter
+            sudo systemctl enable node_exporter
+            ;;
+        n|N) 
+            echo "Skipping node exporter install."
+            ;;
+        *) 
+            echo "Invalid choice. Exiting."
+            exit 1
+            ;;
+    esac
 }
