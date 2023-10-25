@@ -14,19 +14,19 @@ includeDependencies
 function main() {
     echo "Calling main.."
 
-    # read -rp "Do you wish to update and upgrade the system? (y/n) " choice
-    # case "${choice}" in
-    #     y|Y) 
-    #         sudo apt-get update && sudo apt-get upgrade -y
-    #         ;;
-    #     n|N) 
-    #         echo "Update and upgrade skipped."
-    #         ;;
-    #     *) 
-    #         echo "Invalid choice. Exiting."
-    #         exit 1
-    #         ;;
-    # esac
+    read -rp "Do you wish to update and upgrade the system? (y/n) " choice
+    case "${choice}" in
+        y|Y) 
+            sudo apt-get update && sudo apt-get upgrade -y
+            ;;
+        n|N) 
+            echo "Update and upgrade skipped."
+            ;;
+        *) 
+            echo "Invalid choice. Exiting."
+            exit 1
+            ;;
+    esac
 
     # # Run setup functions
 
@@ -38,21 +38,21 @@ function main() {
     read -rsp "Enter the password for the Traefik web GUI: " webgui_pass
 
 
-    # echo  # This is to move to the next line after the silent password prompt
-    # addUserAccount "${username}" "${password}" "true"
+    echo  # This is to move to the next line after the silent password prompt
+    addUserAccount "${username}" "${password}" "true"
 
-    # read -rp $'Paste in the public SSH key for the new user:\n' sshKey
-    # echo 'Running setup script...'
+    read -rp $'Paste in the public SSH key for the new user:\n' sshKey
+    echo 'Running setup script...'
 
-    # # disableSudoPassword "${username}"
-    # addSSHKey "${username}" "${sshKey}"
-    # changeSSHConfig
-    # setupUfw
+    # disableSudoPassword "${username}"
+    addSSHKey "${username}" "${sshKey}"
+    changeSSHConfig
+    setupUfw
 
-    # sudo service ssh restart
+    sudo service ssh restart
     
-    # installFail2Ban
-    # installDocker "${username}"
+    installFail2Ban
+    installDocker "${username}"
     installTraefik "${traefik_email}" "${traefik_domain}" "${webgui_user}" "${webgui_pass}"
 
 
