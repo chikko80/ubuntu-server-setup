@@ -14,7 +14,19 @@ includeDependencies
 function main() {
     echo "Calling main.."
 
-    sudo apt-get update && sudo apt-get upgrade -y
+    read -rp "Do you wish to update and upgrade the system? (y/n) " choice
+    case "${choice}" in
+        y|Y) 
+            sudo apt-get update && sudo apt-get upgrade -y
+            ;;
+        n|N) 
+            echo "Update and upgrade skipped."
+            ;;
+        *) 
+            echo "Invalid choice. Exiting."
+            exit 1
+            ;;
+    esac
 
     # Run setup functions
     trap cleanup EXIT SIGHUP SIGINT SIGTERM
