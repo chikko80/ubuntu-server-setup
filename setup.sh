@@ -32,8 +32,6 @@ function main() {
     read -rp $'Paste in the public SSH key for the new user:\n' sshKey
     echo 'Running setup script...'
 
-    exec 3>&1 >>"${output_file}" 2>&1
-
     # disableSudoPassword "${username}"
     addSSHKey "${username}" "${sshKey}"
     changeSSHConfig
