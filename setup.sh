@@ -6,6 +6,7 @@ function includeDependencies() {
     echo "Calling includeDependencies.."
     # shellcheck source=./setupLibrary.sh
     source "./setupLibrary.sh"
+    source "./addonLibrary.sh"
 }
 
 includeDependencies
