@@ -18,44 +18,40 @@ includeDependencies
 output_file="output.log"
 
 function main() {
-    read -rp "Do you want to create a new non-root user? (Recommended) [Y/N] " createUser
+
+    sudo apt-get update && sudo apt-get upgrade -y
 
     # Run setup functions
     trap cleanup EXIT SIGHUP SIGINT SIGTERM
 
-    if [[ $createUser == [nN] ]]; then
-        username=$(whoami)
-        updateUserAccount "${username}"
-    elif [[ $createUser == [yY] ]]; then
-        read -rp "Enter the username of the new user account: " username
-        addUserAccount "${username}"
-    else
-	echo 'This is not a valid choice!'
-	exit 1
-    fi
+    read -rp "Enter the username of the new user account: " username
+    read -rsp "Enter the password for the new user account: " password
+    echo  # This is to move to the next line after the silent password prompt
+    addUserAccount "${username}" "${password}"
 
     read -rp $'Paste in the public SSH key for the new user:\n' sshKey
     echo 'Running setup script...'
-    logTimestamp "${output_file}"
 
     exec 3>&1 >>"${output_file}" 2>&1
 
-
-    disableSudoPassword "${username}"
+    # disableSudoPassword "${username}"
     addSSHKey "${username}" "${sshKey}"
     changeSSHConfig
     setupUfw
 
-    if ! hasSwap; then
+    if !hasSwap; then
         setupSwap
     fi
 
-    setupTimezone
-
-    echo "Configuring System Time... " >&3
-    configureNTP
+    # echo "Configuring System Time... " >&3
+    # setupTimezone
+    # configureNTP
 
     sudo service ssh restart
+    
+    installFail2Ban
+    installDocker "${username}"
+    installTraefik
 
     cleanup
 

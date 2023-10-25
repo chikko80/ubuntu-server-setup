@@ -16,16 +16,25 @@ function updateUserAccount() {
 #   Flag to determine if user account is added silently. (With / Without GECOS prompt)
 function addUserAccount() {
     local username=${1}
-    local silent_mode=${2}
+    local password=${2}
+    local silent_mode=${3}
 
+    # Check for silent mode; if provided, avoid extra prompts during user creation
     if [[ ${silent_mode} == "true" ]]; then
         sudo adduser --disabled-password --gecos '' "${username}"
     else
         sudo adduser --disabled-password "${username}"
     fi
 
+    # Change the password for the user to the one provided
+    echo "${username}:${password}" | sudo chpasswd
+
+    # Add the user to the 'sudo' group
     sudo usermod -aG sudo "${username}"
-    sudo passwd -d "${username}"
+
+    # If you still want the option to clear the password, you can leave this line.
+    # However, since you're setting a password for the user, it might not be needed.
+    # sudo passwd -d "${username}"
 }
 
 # Add the local machine public SSH Key for the new user account
@@ -62,8 +71,11 @@ function changeSSHConfig() {
 # Setup the Uncomplicated Firewall
 function setupUfw() {
     sudo apt-get install ufw
+    sudo ufw default deny outgoing
     sudo ufw allow OpenSSH
-    yes y | sudo ufw enable
+    sudo ufw allow 80
+    sudo ufw allow 443
+    sudo ufw enable
 }
 
 # Create the swap file based on amount of physical memory on machine (Maximum size of swap is 4GB)
@@ -120,6 +132,7 @@ function setTimezone() {
     sudo ln -fs "/usr/share/zoneinfo/${timezone}" /etc/localtime # https://bugs.launchpad.net/ubuntu/+source/tzdata/+bug/1554806
     sudo dpkg-reconfigure -f noninteractive tzdata
 }
+ich mag die gastro
 
 # Configure Network Time Protocol
 function configureNTP() {

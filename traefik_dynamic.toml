@@ -1,0 +1,18 @@
+[tls.options]
+  [tls.options.modern]
+    minVersion = "VersionTLS13"
+
+[http.middlewares.apiAuth.basicAuth]
+  users = [
+    # use `htpasswd -n admin` to generate the secret
+    "credentials"
+  ]
+
+[http.routers.api]
+  rule = "Host(`traefik.domain_placeholder`)"
+  entrypoints = ["websecure"]
+  middlewares = ["apiAuth"]
+  service = "api@internal"
+  [http.routers.api.tls]
+    certResolver = "lets-encrypt"
+    options = "modern"
